@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,6 +41,8 @@ INSTALLED_APPS = [
     'Category',
     'accounts',
     'store',
+    'carts',
+    'orders',
 
 
 ]
@@ -54,6 +57,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# CSRF Settings
+CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_HTTPONLY = False
+CSRF_USE_SESSIONS = False
+CSRF_COOKIE_SAMESITE = 'Lax'
+
 ROOT_URLCONF = 'selvarsu.urls'
 
 TEMPLATES = [
@@ -67,6 +76,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'Category.context_processors.menu_links',
+                'carts.context_processors.counter',
             ],
         },
     },
@@ -74,6 +84,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'selvarsu.wsgi.application'
 AUTH_USER_MODEL = 'accounts.Account'
+
+
 
 
 # Database
@@ -133,3 +145,20 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+    # messages.SUCCESS: 'success',
+    # messages.WARNING: 'warning',
+    # messages.INFO: 'info',
+}
+
+# Email configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'selvarasutextiles@gmail.com'  # Replace with your email
+EMAIL_HOST_PASSWORD = 'zrbv ztae fmza knyi'  # Use App Password, not regular password

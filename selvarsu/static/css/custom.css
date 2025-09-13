@@ -1,0 +1,140 @@
+/* .rate{
+    display: none;
+    
+}
+.rate{
+    display: inline-block;
+    border: 0;
+}
+.rate{
+    float: right;
+}
+
+
+
+.rate>label:before{
+    display: inline-block;
+    font-size: 1.1rem;
+    font-family: FontAwesome;
+    content: "\f005";
+    margin: 0;
+    padding: 0.3rem .2em;
+    cursor: pointer;
+
+}
+
+.rate .half:before{
+    content:"\f089";
+    position: absolute;
+    padding-right: 0;
+}
+
+
+input:checked ~ label , label:hover ~ label{
+    color: #ffcc00;
+}
+input :checked+label:hover,input:checked~label:hover~label,
+label:hover~input:checked ~ label{
+    color: #b2b2b2;
+} */
+
+.rate {
+    float: left;
+    height: 46px;
+    padding: 0 10px;
+}
+
+.rate:not(:checked) > input {
+    position: absolute;
+    top: -9999px;
+}
+
+.rate:not(:checked) > label {
+    float: right;
+    width: 1em;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+    font-size: 30px;
+    color: #ccc;
+}
+
+.rate:not(:checked) > label:before {
+    content: '★ ';
+}
+
+.rate > input:checked ~ label {
+    color: #ffc700;
+}
+
+.rate:not(:checked) > label:hover,
+.rate:not(:checked) > label:hover ~ label {
+    color: #deb217;
+}
+
+.rate > input:checked + label:hover,
+.rate > input:checked + label:hover ~ label,
+.rate > input:checked ~ label:hover,
+.rate > input:checked ~ label:hover ~ label,
+.rate > label:hover ~ input:checked ~ label {
+    color: #c59b08;
+}
+
+.rating-star{
+    color: #ffc700;
+}
+
+
+
+.thumb {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-start;
+}
+
+.thumb li {
+    list-style: none;
+    margin: 0;
+    padding: 5px;
+    display: inline-block;
+}
+
+.thumb li img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.thumb li img:hover {
+    border-color: #3167eb;
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.thumb li a {
+    text-decoration: none;
+    display: block;
+}
+
+.gallery-wrap .img-big-wrap {
+    margin-bottom: 15px;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #fff;
+    border: 1px solid #eee;
+}
+
+.gallery-wrap .img-big-wrap img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    display: block;
+}

@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<section class="section-content padding-y bg">
+<div class="container">
+
+<div class="row">
+    <aside class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-4">Billing Address</h4>
+                <form action="{% url 'place_order' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="col form-group">
+                            <label for="first_name">First Name</label>
+                            <input type="text" class="form-control" name="first_name" value="{{ user.first_name }}" required>
+                        </div>
+                        <div class="col form-group">
+                            <label for="last_name">Last Name</label>
+                            <input type="text" class="form-control" name="last_name" value="{{ user.last_name }}" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" class="form-control" name="email" value="{{ user.email }}" required>
+                        </div>
+                        <div class="col form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="text" class="form-control" name="phone" value="{{ user.phone_number }}" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="address_line_1">Address Line 1</label>
+                        <input type="text" class="form-control" name="address_line_1" value="{{ user.userprofile.address_line_1 }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="address_line_2">Address Line 2 (Optional)</label>
+                        <input type="text" class="form-control" name="address_line_2" value="{{ user.userprofile.address_line_2 }}">
+                    </div>
+                    <div class="form-row">
+                        <div class="col form-group">
+                            <label for="city">City</label>
+                            <input type="text" class="form-control" name="city" value="{{ user.userprofile.city }}" required>
+                        </div>
+                        <div class="col form-group">
+                            <label for="state">State</label>
+                            <input type="text" class="form-control" name="state" value="{{ user.userprofile.state }}" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col form-group">
+                            <label for="country">Country</label>
+                            <input type="text" class="form-control" name="country" value="{{ user.userprofile.country }}" required>
+                        </div>
+                        <div class="col form-group">
+                            <label for="zip_code">Zip Code</label>
+                            <input type="text" class="form-control" name="zip_code" value="{{ user.userprofile.zip_code }}" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="order_note">Order Note (Optional)</label>
+                        <textarea class="form-control" name="order_note" rows="3" placeholder="Any special instructions..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Place Order</button>
+                </form>
+            </div>
+        </div>
+    </aside>
+
+    <aside class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-4">Order Summary</h4>
+                
+                <!-- Order Items -->
+                <div class="order-summary">
+                    <!-- Header -->
+                    <div class="row text-muted small text-uppercase mb-3">
+                        <div class="col-6"><strong>PRODUCT</strong></div>
+                        <div class="col-3 text-center"><strong>QUANTITY</strong></div>
+                        <div class="col-3 text-right"><strong>PRICE</strong></div>
+                    </div>
+                    
+                    <!-- Items -->
+                    {% for cart_item in cart_items %}
+                    <div class="row align-items-center mb-3 pb-3 border-bottom">
+                        <div class="col-6">
+                            <div class="d-flex align-items-center">
+                                <img src="{{ cart_item.product.images.url }}" class="checkout-product-img mr-3" alt="{{ cart_item.product.product_name }}">
+                                <div>
+                                    <h6 class="mb-1">{{ cart_item.product.product_name }}</h6>
+                                    {% if cart_item.variations.all %}
+                                        {% for item in cart_item.variations.all %}
+                                            <small class="text-muted">{{ item.variation_category|capfirst }}: {{ item.variation_value|capfirst }}</small><br>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3 text-center">
+                            <span class="quantity-badge">{{ cart_item.quantity }}</span>
+                        </div>
+                        <div class="col-3 text-right">
+                            <div class="price-info">
+                                <strong>Rs. {{ cart_item.sub_total }}</strong><br>
+                                <small class="text-muted">Rs. {{ cart_item.product.price }} each</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Totals -->
+                <div class="order-totals mt-4">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Total price:</span>
+                        <span>Rs. {{ total }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Tax:</span>
+                        <span>Rs. {{ tax }}</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-3">
+                        <strong>Grand Total:</strong>
+                        <strong>Rs. {{ grand_total }}</strong>
+                    </div>
+                </div>
+
+                <a href="{% url 'store' %}" class="btn btn-light btn-block mb-2">Continue Shopping</a>
+                <!-- <button type="submit" class="btn btn-primary btn-block">Place Order</button> -->
+            </div>
+        </div>
+        </form>
+    </aside>
+</div>
+
+</div>
+</section>
+
+<style>
+.checkout-product-img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.order-summary .row {
+    margin: 0;
+}
+
+.quantity-badge {
+    background-color: #f8f9fa;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+    border: 1px solid #e9ecef;
+}
+
+.price-info strong {
+    font-size: 1.1em;
+    color: #333;
+}
+
+.order-totals {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.order-totals .d-flex {
+    font-size: 0.95em;
+}
+
+.order-totals hr {
+    margin: 15px 0;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #e9ecef !important;
+}
+
+.card-title {
+    font-weight: 600;
+    color: #333;
+}
+
+@media (max-width: 768px) {
+    .checkout-product-img {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .order-summary .col-6,
+    .order-summary .col-3 {
+        padding: 0 8px;
+    }
+}
+</style>
+
+{% endblock %}

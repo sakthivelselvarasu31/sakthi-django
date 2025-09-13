@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="section-conten padding-y bg">
+    {% include 'includes/alerts.html' %}
+
+<div class="container">
+	<div class="row">
+		{% include 'includes/dashboard_sidebar.html' %}
+	<main class="col-md-9">
+		<article class="card">
+		<header class="card-header">
+			<strong class="d-inline-block mr-3">Dashboard</strong>
+		</header>
+		<div class="card-body">
+			<div class="row"> 
+				<div class="col-md-6">
+					<div class="card bg-primary text-white mb-3">
+						<div class="card-body text-center">
+							<h5 class="card-title">Total Orders</h5>
+							<h2 class="display-4">{{ orders_count }}</h2>
+							<p class="card-text">Orders placed successfully</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="card bg-success text-white mb-3">
+						<div class="card-body text-center">
+							<h5 class="card-title">Profile Status</h5>
+							<h4>{% if userprofile %}Complete{% else %}Incomplete{% endif %}</h4>
+							<p class="card-text">Account profile information</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row mt-4">
+				<div class="col-md-12">
+					<div class="card">
+						<div class="card-header">
+							<h5>Quick Actions</h5>
+						</div>
+						<div class="card-body">
+							<a href="{% url 'my_orders' %}" class="btn btn-primary mr-2">View My Orders</a>
+							<a href="{% url 'edit_profile' %}" class="btn btn-info mr-2">Edit Profile</a>
+							<a href="{% url 'store' %}" class="btn btn-success">Continue Shopping</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</article>
+	</main>
+</div>
+</div>
+
+</section>
+{% endblock %}
+
+
+
+

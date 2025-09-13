@@ -1,122 +1,156 @@
-
-
-
 {% extends 'base.html' %}
 {% load static %}
+
 {% block content %}
 <section class="section-content padding-y bg">
 <div class="container">
 
-<!-- ============================ COMPONENT 1 ================================= -->
 <div class="card">
-	<div class="row no-gutters">
-		<aside class="col-md-6">
-<article class="gallery-wrap"> 
-	<div class="img-big-wrap">
-	   <a href="#"><img src="{{ single_product.images.url }}"></a>
-	</div> <!-- img-big-wrap.// -->
-	
-</article> <!-- gallery-wrap .end// -->
-		</aside>
-		<main class="col-md-6 border-left">
-<article class="content-body">
+    <div class="row no-gutters">
+        <aside class="col-md-6">
+            <article class="gallery-wrap"> 
+                <div class="img-big-wrap mainImage">
+                    <center>
+                        <img src="{{ single_product.images.url }}" id="mainImage" alt="{{ single_product.product_name }}">
+                    </center>
+                </div>
+            </article> 
 
-<h2 class="title">{{ single_product.product_name }}</h2>
+            <ul class="thumb">
+                <li>
+                    <a href="{{ single_product.images.url }}" onclick="changeImage(this.href); return false;">
+                        <img src="{{ single_product.images.url }}" alt="Product Image">
+                    </a>
+                </li>
+                {% for gallery_item in product_gallery %}
+                <li>
+                    <a href="{{ gallery_item.image.url }}" onclick="changeImage(this.href); return false;">
+                        <img src="{{ gallery_item.image.url }}" alt="Product Image">
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </aside>
+        
+        <main class="col-md-6 border-left">
+            <form action="{% url 'add_cart' single_product.id %}" method="POST" id="cart-form">
+                {% csrf_token %}
+                <article class="content-body">
+                    <h2 class="title">{{ single_product.product_name }}</h2>
+                    <div class="mb-3"> 
+                        <var class="price h4">Rs. {{ single_product.price }}</var> 
+                    </div> 
+                    <p>{{ single_product.description }}</p>
+                    <hr>
+                    
+                    {% if single_product.variation_set.colors %}
+                    <div class="row">
+                        <div class="item-option-select">
+                            <h6>Choose Color</h6>
+                            <select name="color" class="form-control variation-select" required>
+                                <option value="" disabled selected>Select Color</option>
+                                {% for i in single_product.variation_set.colors %}
+                                <option value="{{ i.variation_value|lower }}">{{ i.variation_value|capfirst }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if single_product.variation_set.sizes %}
+                    <div class="row">
+                        <div class="item-option-select">
+                            <h6>Select Size</h6>
+                            <select name="size" class="form-control variation-select" required>
+                                <option value="" disabled selected>Select Size</option>
+                                {% for i in single_product.variation_set.sizes %}
+                                <option value="{{ i.variation_value|lower }}">{{ i.variation_value|capfirst }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <hr>
+                    {% if single_product.stock <= 0 %}
+                        <button class="btn btn-secondary text-disabled" disabled>Out of Stock</button>
+                    {% else %}
+                        <div id="cart-buttons">
+                            <button type="submit" class="btn btn-primary" id="add-cart-btn"> 
+                                <span class="text">Add to cart</span> 
+                                <i class="fas fa-shopping-cart"></i>
+                            </button>
+                        </div>
+                    {% endif %}
+                </article>
+            </form>
+        </main>
+    </div>
+</div>
 
-<div class="mb-3"> 
-	<var class="price h4">Rs. {{ single_product.price }}</var> 
-</div> 
-
-<p>{{ single_product.description }}</p>
-
-
-<hr>
-	<div class="row">
-		<div class="item-option-select">
-			<h6>Choose Color</h6>
-			<div class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
-			  <label class="btn btn-light">
-			    <input type="radio" name="radio_color"> Silver
-			  </label>
-			  <label class="btn btn-light">
-			    <input type="radio" name="radio_color" > Gray
-			  </label>
-			  <label class="btn btn-light active">
-			    <input type="radio" name="radio_color checked"> Gold
-			  </label>
-			  <label class="btn btn-light">
-			    <input type="radio" name="radio_color"> Black
-			  </label>
-			</div> 
-		</div>
-	</div> <!-- row.// -->
-	<div class="row">
-		<div class="item-option-select">
-			<h6>Select Size</h6>
-			<div class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
-			  <label class="btn btn-light">
-			    <input type="radio" name="radio_color"> S
-			  </label>
-			  <label class="btn btn-light active">
-			    <input type="radio" name="radio_color" checked> M
-			  </label>
-			  <label class="btn btn-light">
-			    <input type="radio" name="radio_color"> L
-			  </label>
-			  <label class="btn btn-light">
-			    <input type="radio" name="radio_color"> XL
-			  </label>
-			</div> 
-		</div>
-	</div> <!-- row.// -->
-	<hr>
-    {% if single_product.stock <= 0 %}
-	<button class="btn  btn-primary text-damaged">Out of Stock</button>
-	{% else %}
-	<a href="./product-detail.html" class="btn  btn-primary"> <span class="text">Add to cart</span> <i class="fas fa-shopping-cart"></i>  </a>
-    {% endif %}
-</article> <!-- product-info-aside .// -->
-		</main> <!-- col.// -->
-	</div> <!-- row.// -->
-</div> <!-- card.// -->
-<!-- ============================ COMPONENT 1 END .// ================================= -->
-
-<br>
-
-<div class="row">
-			<div class="col-md-9">
-
-	<header class="section-heading">
-		<h3>Customer Reviews </h3>  
-		
-	</header>
-
-	<article class="box mb-3">
-		<div class="icontext w-100">
-			<img src="{% static 'images/avatars/avatar1.jpg' %}" class="img-xs icon rounded-circle">
-			<div class="text">
-				<span class="date text-muted float-md-right">24.04.2020 </span>  
-				<h6 class="mb-1">Mike John </h6>
-				
-			</div>
-		</div> <!-- icontext.// -->
-		<div class="mt-3">
-			<p>
-				Dummy comment Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-				quis nostrud exercitation ullamco laboris nisi ut aliquip
-			</p>	
-		</div>
-	</article>
-
-	
-
-	</div> <!-- col.// -->
-</div> <!-- row.// -->
-
-
-</div> <!-- container .//  -->
+</div>
 </section>
-<!-- ========================= SECTION CONTENT END// ========================= -->
 
+<script>
+function changeImage(imageUrl) {
+    document.getElementById('mainImage').src = imageUrl;
+}
+
+// jQuery fallback
+$(document).ready(function(){
+    $('ul.thumb a').click(function(e) {
+        e.preventDefault();
+        var imageUrl = $(this).attr('href');
+        $('#mainImage').attr('src', imageUrl);
+    });
+});
+</script>
 {% endblock %}
+
+<script>
+$(document).ready(function(){
+    $('.variation-select').change(function(){
+        checkCartStatus();
+    });
+    
+    function checkCartStatus() {
+        var color = $('select[name="color"]').val();
+        var size = $('select[name="size"]').val();
+        
+        // Only check if both variations are selected
+        if (color && size) {
+            $.ajax({
+                url: '{% url "check_cart_status" %}',
+                type: 'POST',
+                data: {
+                    'product_id': {{ single_product.id }},
+                    'color': color,
+                    'size': size,
+                    'csrfmiddlewaretoken': $('[name=csrfmiddlewaretoken]').val()
+                },
+                success: function(response) {
+                    if (response.in_cart) {
+                        $('#cart-buttons').html(`
+                            <a href="{% url 'cart' %}" class="btn btn-success"> 
+                                <span class="text">Added to Cart</span> 
+                                <i class="fas fa-check"></i>
+                            </a>
+                            <a href="{% url 'cart' %}" class="btn btn-outline-primary"> 
+                                <span class="text">View Cart</span> 
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        `);
+                    } else {
+                        $('#cart-buttons').html(`
+                            <button type="submit" class="btn btn-primary" id="add-cart-btn"> 
+                                <span class="text">Add to cart</span> 
+                                <i class="fas fa-shopping-cart"></i>
+                            </button>
+                        `);
+                    }
+                }
+            });
+        }
+    }
+});
+</script>

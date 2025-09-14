@@ -47,10 +47,11 @@ def cash_on_delivery(request):
                 orderproduct.ordered = True
                 orderproduct.save()
 
-                # Add variations
+                # Add variations only if they exist
                 product_variation = item.variations.all()
-                orderproduct.variations.set(product_variation)
-                orderproduct.save()
+                if product_variation.exists():
+                    orderproduct.variations.set(product_variation)
+                    orderproduct.save()
 
                 # Update product stock
                 product = Product.objects.get(id=item.product_id)

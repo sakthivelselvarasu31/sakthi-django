@@ -1,14 +1,17 @@
 from django.contrib import admin
-
 from .models import Payment, Order, OrderProduct
-# Register your models here.
-
-
 
 class OrderProductInline(admin.TabularInline):
     model = OrderProduct
-    readonly_fields = ('payment', 'user', 'product', 'quantity', 'product_price', 'ordered')
+    readonly_fields = ('payment', 'user', 'product', 'quantity', 'product_price', 'ordered', 'variations_display')
+    fields = ('product', 'quantity', 'product_price', 'variations_display', 'ordered')
     extra = 0
+    
+    def variations_display(self, obj):
+        if obj.variations.exists():
+            return ", ".join([f"{v.variation_category}: {v.variation_value}" for v in obj.variations.all()])
+        return "No variations"
+    variations_display.short_description = 'Variations'
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['order_number', 'full_name', 'phone', 'email', 'city', 'state', 'country', 'order_total', 'tax', 'status', 'is_ordered', 'created_at']
@@ -24,9 +27,15 @@ class PaymentAdmin(admin.ModelAdmin):
     readonly_fields = ['payment_id', 'user', 'payment_method', 'amount_paid', 'status', 'created_at']
 
 class OrderProductAdmin(admin.ModelAdmin):
-    list_display = ['order', 'product', 'user', 'quantity', 'product_price', 'ordered', 'created_at']
+    list_display = ['order', 'product', 'user', 'quantity', 'product_price', 'variations_display', 'ordered', 'created_at']
     list_filter = ['ordered', 'created_at']
     search_fields = ['order__order_number', 'product__product_name', 'user__email']
+    
+    def variations_display(self, obj):
+        if obj.variations.exists():
+            return ", ".join([f"{v.variation_category}: {v.variation_value}" for v in obj.variations.all()])
+        return "No variations"
+    variations_display.short_description = 'Variations'
 
 admin.site.register(Payment, PaymentAdmin)
 admin.site.register(Order, OrderAdmin)

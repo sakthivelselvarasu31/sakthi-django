@@ -1,0 +1,17 @@
+<!-- Add loading to quantity update buttons -->
+<script>
+$('.qty-btn').click(function() {
+    const $btn = $(this);
+    setButtonLoading($btn, '');
+    
+    // Reset after a short delay (you can remove this if using AJAX)
+    setTimeout(function() {
+        resetButtonLoading($btn);
+    }, 1000);
+});
+
+$('.btn-remove').click(function() {
+    setButtonLoading(this, 'Removing...');
+    showLoading();
+});
+</script>

@@ -50,10 +50,12 @@
               <img src="{{ cart_item.product.images.url }}" class="checkout-product-img mr-3" alt="{{ cart_item.product.product_name }}" style="width: 60px; height: auto;">
               <div>
                 <h6 class="mb-1">{{ cart_item.product.product_name }}</h6>
-                {% if cart_item.variations.all %}
+                {% if cart_item.variations.exists %}
                   {% for item in cart_item.variations.all %}
                     <small class="text-muted">{{ item.variation_category|capfirst }} : {{ item.variation_value|capfirst }}</small><br>
                   {% endfor %}
+                {% else %}
+                  <small class="text-muted">No variations</small>
                 {% endif %}
               </div>
             </div>
@@ -91,7 +93,7 @@
 			<p class="text-center mb-3">
 				<img src="{% static './images/misc/payments.png' %}" height="26">
 			</p>
-			
+
 			<!-- Cash on Delivery Button -->
 			<form action="{% url 'cash_on_delivery' %}" method="POST">
 				{% csrf_token %}
